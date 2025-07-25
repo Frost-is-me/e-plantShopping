@@ -87,3 +87,4 @@ const CartItem = ({ onContinueShopping }) => {
 export default CartItem;
 
 
+// CartItem.jsx
