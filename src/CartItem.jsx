@@ -9,13 +9,15 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- let totalCost = 0
+    let totalCost = 0;
     cart.forEach(plant => {
-        plant.cost = parseFloat(plant.cost)
-        const price = plant.quantity * plant.cost
-        totalCost += price
+      const cost = parseFloat(
+        typeof plant.cost === 'string' ? plant.cost.replace('$', '') : plant.cost
+      );
+      const price = plant.quantity * cost;
+      totalCost += price;
     });
-    return totalCost
+    return totalCost;
   };
 
   const handleContinueShopping = (e) => {
@@ -34,23 +36,21 @@ const CartItem = ({ onContinueShopping }) => {
    if(item.quantity > 1) {
     dispatch(updateQuantity({name:item.name, quantity: item.quantity - 1}))
    }
-   else if( item.quantity < 1 && item.quantity === 0){
-   dispatch(removeItem(item))
+   else{
+   dispatch(removeItem(item.name))
 }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    let totalCost = 0
-    item.forEach((plant) => {
-        plant.cost = parseFloat(plant.cost)
-        const price = plant.cost * plant.quantity
-        totalCost += price
-    })
-    return totalCost
+    const cost = parseFloat(
+      typeof item.cost === 'string' ? item.cost.replace('$', '') : item.cost
+    );
+    return cost * item.quantity;
   };
 
   return (
@@ -62,7 +62,7 @@ const CartItem = ({ onContinueShopping }) => {
             <img className="cart-item-image" src={item.image} alt={item.name} />
             <div className="cart-item-details">
               <div className="cart-item-name">{item.name}</div>
-              <div className="cart-item-cost">{item.cost}</div>
+              <div className="cart-item-cost">${item.cost}</div>
               <div className="cart-item-quantity">
                 <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
                 <span className="cart-item-quantity-value">{item.quantity}</span>
